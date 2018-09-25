@@ -1,0 +1,87 @@
+{
+  "name": "@dwqs/react-virtual-list",
+  "version": "1.0.0",
+  "description": "A tiny virtualization list component, supports variable height",
+  "author": "pomysky@gmail.com",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "prepush": "npm run ilint -q",
+    "dev": "npx cross-env NODE_ENV=development node ./build/dev-server.js",
+    "build": "npx rimraf dist && npx cross-env NODE_ENV=production npx webpack --config ./webpack.build.config.js --progress --hide-modules",
+    "ilint": "npx standard",
+    "fix": "npx standard --fix",
+    "commitmsg": "commitlint -E GIT_PARAMS"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-router-dom": "^4.3.1",
+    "@babel/core": "^7.1.0",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-decorators": "^7.1.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "@commitlint/cli": "^7.1.2",
+    "@commitlint/config-angular": "^7.1.2",
+    "autoprefixer": "^9.1.5",
+    "babel-eslint": "^9.0.0",
+    "babel-loader": "^8.0.2",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.15",
+    "prop-types": "^15.6.2",
+    "react-dev-utils": "^6.0.0-next.3e165448",
+    "compression-webpack-plugin": "^2.0.0",
+    "copy-webpack-plugin": "^4.5.2",
+    "cross-env": "^5.2.0",
+    "css-loader": "^1.0.0",
+    "eslint": "^5.4.0",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "standard": "^12.0.1",
+    "mini-css-extract-plugin": "^0.4.3",
+    "my-ip": "^1.1.1",
+    "happypack": "^5.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "plugin-error": "^1.0.1",
+    "chalk": "^2.4.1",
+    "husky": "^0.14.3",
+    "less": "^3.8.1",
+    "less-loader": "^4.1.0",
+    "open-browser-webpack-plugin": "^0.0.5",
+    "optimize-css-assets-webpack-plugin": "^5.0.0",
+    "postcss-safe-parser": "^4.0.1",
+    "postcss-loader": "^3.0.0",
+    "style-loader": "^0.23.0",
+    "url-loader": "^1.1.1",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8",
+    "webpack-md5-hash": "^0.0.6",
+    "webpack-inline-manifest-plugin": "^4.0.1",
+    "progress-bar-webpack-plugin": "^1.11.0",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack-merge": "^4.1.4"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "*.svg",
+      "*.less"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": [
+        "standard"
+      ]
+    }
+  },
+  "engines": {
+    "node": "> 8.1.4",
+    "npm": ">= 5.2.0"
+  }
+}
