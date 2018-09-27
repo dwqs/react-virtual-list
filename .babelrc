@@ -1,0 +1,27 @@
+{
+  "presets": [
+    [
+      "@babel/env", {
+        "targets": {
+          "browsers": [
+            "last 5 versions",
+            "Android >= 5.0", 
+            "iOS > 8",
+            "safari > 8",
+            "ie >= 10"
+          ]
+        },
+        "modules": false,
+        "useBuiltIns": "entry",
+        "loose": true
+      }
+    ],
+    "@babel/react"
+  ],
+  "plugins": [
+    "transform-react-remove-prop-types",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose" : true }],
+    "@babel/plugin-syntax-dynamic-import"
+  ]
+}
