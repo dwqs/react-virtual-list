@@ -10,7 +10,7 @@ const env = process.env.NODE_ENV || 'development'
 
 module.exports = {
   mode: env,
-  context: utils.resolve('demo'),
+  // context: utils.resolve('demo'),
   module: {
     noParse: [/static|assets/],
     rules: [
@@ -105,7 +105,7 @@ module.exports = {
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'index.html',
+      template: 'tpl.html',
       inject: true,
       env: env,
       minify: {
