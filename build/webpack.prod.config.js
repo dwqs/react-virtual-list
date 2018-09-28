@@ -3,7 +3,7 @@ const merge = require('webpack-merge')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const WebpackMd5Hash = require('webpack-md5-hash')
-const CompressionPlugin = require('compression-webpack-plugin')
+// const CompressionPlugin = require('compression-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const HappyPack = require('happypack')
 const WebpackInlineManifestPlugin = require('webpack-inline-manifest-plugin')
@@ -95,13 +95,13 @@ module.exports = merge(baseWebpackConfig, {
     }),
 
     // gzip
-    new CompressionPlugin({
-      filename: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: /\.(js|html|less|css)$/,
-      threshold: 10240,
-      minRatio: 0.8
-    }),
+    // new CompressionPlugin({
+    //   filename: '[path].gz[query]',
+    //   algorithm: 'gzip',
+    //   test: /\.(js|html|less|css)$/,
+    //   threshold: 10240,
+    //   minRatio: 0.8
+    // }),
 
     new UglifyJsPlugin({
       parallel: true,
