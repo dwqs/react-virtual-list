@@ -1,7 +1,7 @@
 const path = require('path')
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: {
     index: path.resolve(__dirname, './src/index')
   },
@@ -24,6 +24,10 @@ module.exports = {
   resolve: {
     extensions: ['.jsx', '.js'],
     modules: [path.join(__dirname, './node_modules')]
+  },
+
+  optimization: {
+    minimize: false
   },
 
   externals: [{
