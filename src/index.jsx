@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import throttle from 'lodash.throttle'
+import find from 'lodash.find'
 
 import Item from './Item'
 import Rectangle from './Rectangle'
@@ -18,17 +19,15 @@ class VirtualizedList extends React.Component {
       paddingTop: 0
     }
 
-    this.style = {
-      ...props.style
-    }
+    this.style = {}
 
     if (!isNaN(props.height)) {
-      this.style = Object.assign({}, this.style, {
+      this.style = {
         overflowY: 'auto',
         overflowX: 'hidden',
         WebkitOverflowScrolling: 'touch',
         height: `${props.height}px`
-      })
+      }
     }
 
     this.items = []
@@ -85,7 +84,6 @@ class VirtualizedList extends React.Component {
       index: 0,
       top: 0,
       bottom: 0,
-      height: 0,
       id: undefined
     }
 
@@ -106,7 +104,7 @@ class VirtualizedList extends React.Component {
 
     if (index === 0) {
       this.anchorItem = {
-        ...this.anchorItem,
+        index,
         top,
         id,
         bottom: top + rect.height
@@ -180,15 +178,13 @@ class VirtualizedList extends React.Component {
     }
 
     if (scrollTop > this.anchorItem.bottom) {
-      const rect = Object.values(this.rects).find(rect => rect.getBottom() > scrollTop)
+      const rect = find(this.rects, rect => rect.getBottom() >= scrollTop)
 
       if (!rect) {
         return
       }
 
-      this.anchorItem = {
-        ...rect.getRectInfo()
-      }
+      this.anchorItem = rect.getRectInfo()
 
       let startIndex = this.startIndex
       startIndex = this.anchorItem.index >= bufferSize ? this.anchorItem.index - bufferSize : startIndex
@@ -213,15 +209,13 @@ class VirtualizedList extends React.Component {
     scrollTop = scrollTop || 0
 
     if (scrollTop < this.anchorItem.top) {
-      const rect = Object.values(this.rects).find(rect => rect.getBottom() >= scrollTop)
+      const rect = find(this.rects, rect => rect.getBottom() >= scrollTop)
 
       if (!rect) {
         return
       }
 
-      this.anchorItem = {
-        ...rect.getRectInfo()
-      }
+      this.anchorItem = rect.getRectInfo()
 
       let startIndex = this.startIndex
       startIndex = this.anchorItem.index >= bufferSize ? this.anchorItem.index - bufferSize : 0
@@ -368,7 +362,6 @@ VirtualizedList.propTypes = {
   height: PropTypes.number,
   estimatedItemHeight: PropTypes.number,
   className: PropTypes.string,
-  style: PropTypes.object,
   onReachedBottom: PropTypes.func,
   onScroll: PropTypes.func,
   loadingComponent: PropTypes.node,
@@ -382,7 +375,6 @@ VirtualizedList.defaultProps = {
   data: [],
   estimatedItemHeight: 175,
   className: '',
-  style: {},
   renderItem: noop,
   bufferSize: 5,
   onReachedBottom: noop,
