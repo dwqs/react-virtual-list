@@ -15,6 +15,28 @@
     "fix": "npx standard --fix",
     "commitmsg": "commitlint -E GIT_PARAMS"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dwqs/react-virtual-list.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dwqs/react-virtual-list/issues"
+  },
+  "keywords": [
+    "react",
+    "virtualized",
+    "virtualization",
+    "react-virtual",
+    "react-virtualized",
+    "virtual-list",
+    "react-list",
+    "virtual",
+    "list",
+    "infinite",
+    "scrolling",
+    "dynamic-height",
+    "variable-height"
+  ],
   "files": [
     "dist",
     "package.json",
