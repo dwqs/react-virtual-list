@@ -10,7 +10,7 @@ module.exports = {
     path: path.join(__dirname, './dist'),
     filename: '[name].js',
     library: 'ReactVirtualList',
-    libraryTarget: 'umd'
+    libraryTarget: 'commonjs2'
   },
 
   module: {
