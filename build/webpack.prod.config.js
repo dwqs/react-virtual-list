@@ -120,7 +120,7 @@ module.exports = merge(baseWebpackConfig, {
 
     new WebpackMd5Hash(),
     new WebpackInlineManifestPlugin({
-        name: 'webpackManifest'
+      name: 'webpackManifest'
     })
   ]
-});
+})
