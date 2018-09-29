@@ -5,6 +5,7 @@
   "author": "pomysky@gmail.com",
   "license": "MIT",
   "private": false,
+  "main": "dist/index.js",
   "scripts": {
     "prepush": "npm run ilint -q",
     "dev": "npx rimraf demo/dist && npx cross-env NODE_ENV=development node ./build/dev-server.js",
