@@ -118,8 +118,6 @@ class VirtualizedList extends React.Component {
       height: rect.height,
       index
     })
-
-    window.rects = this.rects
   }
 
   getRenderItems (callback = noop) {
