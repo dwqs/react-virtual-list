@@ -248,7 +248,7 @@ class VirtualizedList extends React.Component {
       this.doc = this.el === document.defaultView ? (window.document.body.scrollTop ? window.document.body : window.document.documentElement) : this.el
     }
 
-    this.props.scrollListener(e)
+    this.props.onScroll(e)
 
     // Set a timer to judge scroll of element is stopped
     this.timer && clearTimeout(this.timer)
@@ -365,15 +365,14 @@ class VirtualizedList extends React.Component {
 VirtualizedList.propTypes = {
   renderItem: PropTypes.func.isRequired,
   uniqueField: PropTypes.string.isRequired,
-  data: PropTypes.array,
+  data: PropTypes.array.isRequired,
   bufferSize: PropTypes.number,
   height: PropTypes.number,
   estimatedItemHeight: PropTypes.number,
   className: PropTypes.string,
   style: PropTypes.object,
   onReachedBottom: PropTypes.func,
-  scrollListener: PropTypes.func,
-  scrollEnd: PropTypes.func,
+  onScroll: PropTypes.func,
   loadingComponent: PropTypes.node,
   endComponent: PropTypes.node,
   hasMore: PropTypes.bool,
@@ -389,8 +388,7 @@ VirtualizedList.defaultProps = {
   renderItem: noop,
   bufferSize: 5,
   onReachedBottom: noop,
-  scrollListener: noop,
-  scrollEnd: noop,
+  onScroll: noop,
   loadingComponent: null,
   endComponent: null,
   hasMore: false,
