@@ -68,7 +68,6 @@ Check out the online demo [here](https://dwqs.github.io/react-virtual-list/)
 |bufferSize|Number|5||Buffer size for the visible subset of `data`|
 |estimatedItemHeight|Number|175||The estimated height of the list item element, which is used to estimate the total height of the list before all of its items have actually been measured|
 |className|String|''||Class names of the wrapper element|
-|style|Object|{}||Style of the wrapper element|
 |onScroll|Function|() => {}||Callback invoked when scrollTop of the wrapper element is changed|
 |onReachedBottom|Function|() => {}||Used to infinite scroll. Callback invoked when scroll to the bottom of the wrapper element to load next page data|
 |loadingComponent|React.PropTypes.node|null||Used to infinite scroll. The component will show when loading next page data|
