@@ -1,7 +1,7 @@
 import './index.less'
 
 import React from 'react'
-import faker from 'faker'
+import faker from 'faker/locale/zh_CN'
 
 import VirtualizedList from '@src/index'
 import Image from './Image'
