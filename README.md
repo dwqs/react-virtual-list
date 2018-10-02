@@ -1,5 +1,6 @@
 ![npm-version](https://img.shields.io/npm/v/@dwqs/react-virtual-list.svg?style=for-the-badge) ![license](https://img.shields.io/github/license/dwqs/react-virtual-list.svg?style=for-the-badge) ![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=for-the-badge)
 
+[README 中文](./README-CN.md)
 # react-virtual-list
 A tiny virtualization list component, supports dynamic height.
 
