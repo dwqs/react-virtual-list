@@ -8,7 +8,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prepush": "npm run ilint -q",
-    "dev": "npx rimraf demo/dist && npx cross-env NODE_ENV=development node ./build/dev-server.js",
+    "dev": "npx cross-env NODE_ENV=development node ./build/dev-server.js",
     "prod": "npx rimraf demo/dist && npx cross-env NODE_ENV=production npx webpack --config ./build/webpack.prod.config.js --progress --hide-modules",
     "postprod": "mv ./demo/dist/index.html ./",
     "build": "npx rimraf dist && npx cross-env NODE_ENV=production npx webpack --config ./webpack.build.config.js --progress --hide-modules",
