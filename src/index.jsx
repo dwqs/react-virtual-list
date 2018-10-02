@@ -160,8 +160,31 @@ class VirtualizedList extends React.Component {
     this.getRenderItems()
   }
 
+  updateBoundaryIndex (scrollTop) {
+    const { bufferSize, data } = this.props
+    const rect = find(this.rects, rect => rect.getBottom() >= scrollTop)
+
+    if (!rect) {
+      return
+    }
+
+    this.anchorItem = rect.getRectInfo()
+
+    let startIndex = this.startIndex
+    startIndex = this.anchorItem.index >= bufferSize ? this.anchorItem.index - bufferSize : 0
+
+    if (this.startIndex === startIndex) {
+      return
+    }
+
+    const endIndex = this.anchorItem.index + this.visibleCount
+
+    this.startIndex = startIndex
+    this.endIndex = endIndex > data.length ? data.length : endIndex
+  }
+
   scrollUp (scrollTop) {
-    const { bufferSize, hasMore, data } = this.props
+    const { hasMore } = this.props
 
     // Hand is scrolling up
     scrollTop = scrollTop || 0
@@ -178,57 +201,17 @@ class VirtualizedList extends React.Component {
     }
 
     if (scrollTop > this.anchorItem.bottom) {
-      const rect = find(this.rects, rect => rect.getBottom() >= scrollTop)
-
-      if (!rect) {
-        return
-      }
-
-      this.anchorItem = rect.getRectInfo()
-
-      let startIndex = this.startIndex
-      startIndex = this.anchorItem.index >= bufferSize ? this.anchorItem.index - bufferSize : startIndex
-
-      if (this.startIndex === startIndex) {
-        return
-      }
-
-      const endIndex = this.anchorItem.index + this.visibleCount
-
-      this.startIndex = startIndex
-      this.endIndex = endIndex > data.length ? data.length : endIndex
-
+      this.updateBoundaryIndex(scrollTop)
       this.getRenderItems()
     }
   }
 
   scrollDown (scrollTop) {
-    const { bufferSize, data } = this.props
-
     // Hand is scrolling down
     scrollTop = scrollTop || 0
 
     if (scrollTop < this.anchorItem.top) {
-      const rect = find(this.rects, rect => rect.getBottom() >= scrollTop)
-
-      if (!rect) {
-        return
-      }
-
-      this.anchorItem = rect.getRectInfo()
-
-      let startIndex = this.startIndex
-      startIndex = this.anchorItem.index >= bufferSize ? this.anchorItem.index - bufferSize : 0
-
-      if (this.startIndex === startIndex) {
-        return
-      }
-
-      const endIndex = this.anchorItem.index + this.visibleCount
-
-      this.startIndex = startIndex
-      this.endIndex = endIndex > data.length ? data.length : endIndex
-
+      this.updateBoundaryIndex(scrollTop)
       this.getRenderItems()
     }
   }
