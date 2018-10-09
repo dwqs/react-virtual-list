@@ -66,7 +66,7 @@ Check out the online demo [here](https://dwqs.github.io/react-virtual-list/)
 |data|Array||✓|Full array of list object items. Only the visible subset of these will be rendered|
 |uniqueField|String||✓|The unique field of every object item, which value is unique. Like id usually is used to the unique field.|
 |renderItem|Function||✓|Responsible for rendering an item given its index and itself: `(item, idnex): React.PropTypes.node`|
-|bufferSize|Number|5||Buffer size for the visible subset of `data`|
+|bufferSize|Number|5||Number of extra buffer items to render above/below the visible items. Tweaking this can help reduce scroll flickering on certain browsers/devices|
 |estimatedItemHeight|Number|175||The estimated height of the list item element, which is used to estimate the total height of the list before all of its items have actually been measured|
 |className|String|''||Class names of the wrapper element|
 |onScroll|Function|() => {}||Callback invoked when scrollTop of the wrapper element is changed|

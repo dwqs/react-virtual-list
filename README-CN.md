@@ -65,7 +65,7 @@ export default class Hello extends Component {
 |data|Array||✓|对象数组|
 |uniqueField|String||✓|对象的唯一字段，例如 id|
 |renderItem|Function||✓|渲染列表项元素的函数: `(item, idnex): React.PropTypes.node`|
-|bufferSize|Number|5||可见数据的 Buffer 值|
+|bufferSize|Number|5||在可见区域之外的上/下方渲染的 Buffer 值，调整这个值可以避免部分设备上的滚动那个闪烁|
 |estimatedItemHeight|Number|175||列表项的预估高度|
 |className|String|''||设置包裹元素的 className|
 |onScroll|Function|() => {}||滚动容器的 scrollTop 发生改变时触发|
