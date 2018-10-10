@@ -4,7 +4,7 @@
 # react-virtual-list
 A tiny virtualization list component, supports dynamic height.
 
->Attention: In iOS UIWebViews, `scroll` events are not fired while scrolling is taking place; they are only fired after the scrolling has completed. See [more](https://developer.mozilla.org/en-US/docs/Web/Events/scroll#Browser_compatibility)
+>Attention: On iOS UIWebViews, `scroll` events are not fired while scrolling is taking place; they are only fired after the scrolling has completed. See [more](https://developer.mozilla.org/en-US/docs/Web/Events/scroll#Browser_compatibility)
 
 ## Install
 Using npm or yarn:
