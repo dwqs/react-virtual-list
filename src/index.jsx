@@ -140,7 +140,6 @@ class VirtualizedList extends React.Component {
   }
 
   initVisibleData () {
-    this.visibleCount = this.getVisibleCount()
     this.endIndex = this.startIndex + this.visibleCount
 
     this.getRenderItems()
@@ -151,7 +150,6 @@ class VirtualizedList extends React.Component {
     const { bufferSize } = this.props
 
     if (this.startIndex === 0) {
-      this.visibleCount = this.getVisibleCount()
       this.endIndex = this.startIndex + this.visibleCount
     } else {
       this.endIndex = this.endIndex + bufferSize
@@ -276,6 +274,9 @@ class VirtualizedList extends React.Component {
     if (this.el !== document.defaultView) {
       this.containerTopValue = this.el.getBoundingClientRect().top
     }
+
+    // compute visible count once
+    this.visibleCount = this.getVisibleCount()
 
     if (this.props.data.length) {
       this.items = this.getFormatItems(this.props)
