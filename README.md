@@ -76,7 +76,7 @@ Check out the online demo [here](https://dwqs.github.io/react-virtual-list/)
 |hasMore|Boolean|false||Used to infinite scroll. Whether has more data to load|
 |height|Number|undefined||Height of the wrapper element. If `useWindow` is `false` and `scrollableTarget` is undefined, the wrapper element will be the scrollable target|
 |useWindow|Boolean|true||Whether to set the `window` to scrollable target |
-|scrollableTarget|String|undefined||Set the scrollable target, which value is used to `document.getElementById`. `window` is the default scrollable target, so if you want to change it, you need to set `useWindow` to `false` and dont set the `height` prop |
+|scrollableTarget|String|undefined||Set the scrollable target, whose value is used to `document.getElementById`. `window` is the default scrollable target, so if you want to change it, you need to set `useWindow` to `false` and dont set the `height` prop |
 
 ## Development
 ```shell
