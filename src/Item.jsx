@@ -38,7 +38,7 @@ class Item extends React.Component {
   }
 
   componentWillUnmount () {
-    this.ob && this.ob.unobserve(this.node)
+    this.ob && this.ob.disconnect()
   }
 }
 
