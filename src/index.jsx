@@ -243,7 +243,7 @@ class VirtualizedList extends React.Component {
     // Do something, when scroll stop
   }
 
-  getTombstoneHeight (index) {
+  getRenderedItemHeight (index) {
     const h = this.rects[this.items[index].id].getHeight()
     if (h > 0) {
       return `${h}px`
@@ -312,7 +312,7 @@ class VirtualizedList extends React.Component {
                   key={item.id}
                   item={item}
                   itemIndex={this.startIndex + index}
-                  // height={`${this.getTombstoneHeight(this.startIndex + index)}`}
+                  // height={`${this.getRenderedItemHeight(this.startIndex + index)}`}
                   renderItem={this.props.renderItem}
                   updateItemPosition={this.updateItemPosition}
                 />
