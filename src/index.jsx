@@ -184,7 +184,7 @@ class VirtualizedList extends React.Component {
   scrollUp (scrollTop) {
     const { hasMore } = this.props
 
-    // Hand is scrolling up
+    // Hand is scrolling up, scrollTop is increasing
     scrollTop = scrollTop || 0
 
     if (this.endIndex >= this.props.data.length) {
@@ -205,7 +205,7 @@ class VirtualizedList extends React.Component {
   }
 
   scrollDown (scrollTop) {
-    // Hand is scrolling down
+    // Hand is scrolling down, scrollTop is decreasing
     scrollTop = scrollTop || 0
 
     if (scrollTop < this.anchorItem.top) {
