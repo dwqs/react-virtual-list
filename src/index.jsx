@@ -80,6 +80,7 @@ class VirtualizedList extends React.Component {
     this.el = null
 
     // The info of anchor element
+    // which is the first element in visible range
     this.anchorItem = {
       index: 0,
       top: 0,
@@ -132,25 +133,26 @@ class VirtualizedList extends React.Component {
     })
   }
 
-  getVisibleCount () {
-    const { useWindow, bufferSize, estimatedItemHeight } = this.props
+  computeVisibleCount () {
+    const { useWindow, estimatedItemHeight } = this.props
     const h = useWindow ? window.innerHeight : this.el.offsetHeight
 
-    return Math.ceil(h / estimatedItemHeight) + bufferSize
+    this.visibleCount = Math.ceil(h / estimatedItemHeight)
   }
 
   initVisibleData () {
-    this.endIndex = this.startIndex + this.visibleCount
+    const { data, bufferSize } = this.props
+    this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + bufferSize, data.length)
 
     this.getRenderItems()
   }
 
   updateVisibleData () {
     this.isLoadingNextPageData = false
-    const { bufferSize } = this.props
+    const { bufferSize, data } = this.props
 
     if (this.startIndex === 0) {
-      this.endIndex = this.startIndex + this.visibleCount
+      this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + bufferSize, data.length)
     } else {
       this.endIndex = this.endIndex + bufferSize
     }
@@ -168,17 +170,16 @@ class VirtualizedList extends React.Component {
 
     this.anchorItem = rect.getRectInfo()
 
-    let startIndex = this.startIndex
-    startIndex = this.anchorItem.index >= bufferSize ? this.anchorItem.index - bufferSize : 0
+    const startIndex = Math.max(0, this.anchorItem.index - bufferSize)
 
     if (this.startIndex === startIndex) {
       return
     }
 
-    const endIndex = this.anchorItem.index + this.visibleCount
+    const endIndex = Math.min(this.anchorItem.index + this.visibleCount + bufferSize, data.length)
 
     this.startIndex = startIndex
-    this.endIndex = endIndex > data.length ? data.length : endIndex
+    this.endIndex = endIndex
   }
 
   scrollUp (scrollTop) {
@@ -276,7 +277,7 @@ class VirtualizedList extends React.Component {
     }
 
     // compute visible count once
-    this.visibleCount = this.getVisibleCount()
+    this.computeVisibleCount()
 
     if (this.props.data.length) {
       this.items = this.getFormatItems(this.props)
