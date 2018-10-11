@@ -7,7 +7,9 @@ import { noop } from './utils'
 class Item extends React.Component {
   constructor (props) {
     super(props)
+
     this.listenerElementResize = this.listenerElementResize.bind(this)
+    this.resizeObserver = new ResizeObserver(this.listenerElementResize)
   }
 
   listenerElementResize (entries) {
@@ -21,11 +23,18 @@ class Item extends React.Component {
     this.props.updateItemPosition(this.node, item.id, itemIndex)
   }
 
+  setRef (node) {
+    if (this.resizeObserver && node) {
+      this.resizeObserver.observe(node)
+    }
+    this.node = node
+  }
+
   render () {
     const { itemIndex, item } = this.props
 
     return (
-      <div className='item-wrapper' ref={node => { this.node = node }} style={{ minHeight: this.props.height }}>
+      <div className='item-wrapper' ref={node => this.setRef(node)} style={{ minHeight: this.props.height }}>
         { this.props.renderItem(item.data, itemIndex) }
       </div>
     )
@@ -33,12 +42,13 @@ class Item extends React.Component {
 
   componentDidMount () {
     // this.cacheItemSize()
-    this.ob = new ResizeObserver(this.listenerElementResize)
-    this.ob.observe(this.node)
   }
 
   componentWillUnmount () {
-    this.ob && this.ob.disconnect()
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect()
+    }
+    this.resizeObserver = null
   }
 }
 
