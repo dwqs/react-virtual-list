@@ -10,7 +10,7 @@ import createScheduler from './createScheduler'
 import computed from './computed'
 import { isSupportPassive, noop, requestAnimationFrame } from './utils'
 
-class VirtualizedList extends React.Component {
+class VirtualizedList extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
