@@ -215,14 +215,16 @@ class VirtualizedList extends React.Component {
     }
   }
 
-  handleScroll (e) {
+  handleScroll () {
     if (!this.doc) {
       // Use the body element's scrollTop on iOS Safari/Webview
       // Because the documentElement element's scrollTop always is zero
       this.doc = this.el === document.defaultView ? (window.document.body.scrollTop ? window.document.body : window.document.documentElement) : this.el
     }
 
-    this.props.onScroll(e)
+    this.props.onScroll({
+      scrollTop: this.doc.scrollTop
+    })
 
     // Set a timer to judge scroll of element is stopped
     this.timer && clearTimeout(this.timer)
