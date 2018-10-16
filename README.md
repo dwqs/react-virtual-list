@@ -69,7 +69,7 @@ Check out the online demo [here](https://dwqs.github.io/react-virtual-list/)
 |bufferSize|Number|5||Number of extra buffer items to render above/below the visible items. Tweaking this can help reduce scroll flickering on certain browsers/devices|
 |estimatedItemHeight|Number|175||The estimated height of the list item element, which is used to estimate the total height of the list before all of its items have actually been measured|
 |className|String|''||Class names of the wrapper element|
-|onScroll|Function|() => {}||Callback invoked when scrollTop of the wrapper element is changed|
+|onScroll|Function|() => {}||Callback invoked whenever the scroll offset changes within the inner scrollable region: `({scrollTop: number}):void`|
 |onReachedBottom|Function|() => {}||Used to infinite scroll. Callback invoked when scroll to the bottom of the wrapper element to load next page data|
 |loadingComponent|React.PropTypes.node|null||Used to infinite scroll. The component will show when loading next page data|
 |endComponent|React.PropTypes.node|null||Used to infinite scroll. The component will show when no more data to load|
