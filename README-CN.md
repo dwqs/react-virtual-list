@@ -38,7 +38,8 @@ export default class Hello extends Component {
     this.renderItem = this.renderItem.bind(this)
   }
 
-  renderItem (item, index) {
+  renderItem ({index}) {
+    const item = this.data[index]
     return (
       <div>#{index}, {item.val}</div>
     )
