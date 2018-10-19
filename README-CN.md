@@ -65,11 +65,11 @@ export default class Hello extends Component {
 |data|Array||✓|对象数组|
 |uniqueField|String||✓|对象的唯一字段，例如 id|
 |renderItem|Function||✓|渲染列表项元素的函数: `(item, idnex): React.PropTypes.node`|
-|bufferSize|Number|5||在可见区域之外的上/下方渲染的 Buffer 值，调整这个值可以避免部分设备上的滚动那个闪烁|
+|overscanCount|Number|5||在可见区域之外的上/下方渲染的 Buffer 值，调整这个值可以避免部分设备上的滚动那个闪烁|
 |estimatedItemHeight|Number|175||列表项的预估高度|
 |className|String|''||设置包裹元素的 className|
 |onScroll|Function|() => {}||滚动容器的 scrollTop 发生改变时触发: `({scrollTop: number}):void`|
-|onReachedBottom|Function|() => {}||用于无限滚动。当当前数据的最后一个数据被渲染时触发|
+|loadMoreItems|Function|() => {}||用于无限滚动。当需要加载更多数据时触发|
 |loadingComponent|React.PropTypes.node|null||用于无限滚动。当在加载下一页数据时显示的 Loading 组件|
 |endComponent|React.PropTypes.node|null||用于无限滚动。当没有更多可加载的数据时显示的组件|
 |hasMore|Boolean|false||用于无限滚动。表示是否有更多数据需要加载|

@@ -64,13 +64,13 @@ Check out the online demo [here](https://dwqs.github.io/react-virtual-list/)
 |Property|Type|Default|Required?|Description|
 |:--:|:--:|:--:|:--:|:--:|
 |data|Array||✓|Full array of list object items. Only the visible subset of these will be rendered|
-|uniqueField|String||✓|The unique field of every object item, which value is unique. Like id usually is used to the unique field.|
+|uniqueField|String||✓|The unique field of every object item, which value is unique. Like `id` usually is used to the unique field.|
 |renderItem|Function||✓|Responsible for rendering an item given its index and itself: `(item, idnex): React.PropTypes.node`|
-|bufferSize|Number|5||Number of extra buffer items to render above/below the visible items. Tweaking this can help reduce scroll flickering on certain browsers/devices|
+|overscanCount|Number|5||Number of extra buffer items to render above/below the visible items. Tweaking this can help reduce scroll flickering on certain browsers/devices|
 |estimatedItemHeight|Number|175||The estimated height of the list item element, which is used to estimate the total height of the list before all of its items have actually been measured|
 |className|String|''||Class names of the wrapper element|
 |onScroll|Function|() => {}||Callback invoked whenever the scroll offset changes within the inner scrollable region: `({scrollTop: number}):void`|
-|onReachedBottom|Function|() => {}||Used to infinite scroll. Callback invoked when scroll to the bottom of the wrapper element to load next page data|
+|loadMoreItems|Function|() => {}||Used to infinite scroll. Callback to be invoked when more items must be loaded|
 |loadingComponent|React.PropTypes.node|null||Used to infinite scroll. The component will show when loading next page data|
 |endComponent|React.PropTypes.node|null||Used to infinite scroll. The component will show when no more data to load|
 |hasMore|Boolean|false||Used to infinite scroll. Whether has more data to load|
