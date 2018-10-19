@@ -46,8 +46,8 @@ export default class App extends React.Component {
     this.loadNextPage = this.loadNextPage.bind(this)
   }
 
-  renderItem (item, index) {
-    const { id, image, words, paragraphs } = item
+  renderItem ({ data, index }) {
+    const { id, image, words, paragraphs } = data
     return (
       <div className='list-item'>
         <p>#{index} {words}</p>
