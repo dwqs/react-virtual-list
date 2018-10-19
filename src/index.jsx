@@ -150,27 +150,27 @@ class VirtualizedList extends React.PureComponent {
   }
 
   initVisibleData () {
-    const { data, bufferSize } = this.props
-    this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + bufferSize, data.length)
+    const { data, overscanCount } = this.props
+    this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, data.length)
 
     this.getRenderItems()
   }
 
   updateVisibleData () {
     this.isLoadingNextPageData = false
-    const { bufferSize, data } = this.props
+    const { overscanCount, data } = this.props
 
     if (this.startIndex === 0) {
-      this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + bufferSize, data.length)
+      this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, data.length)
     } else {
-      this.endIndex = this.endIndex + bufferSize
+      this.endIndex = this.endIndex + overscanCount
     }
 
     this.getRenderItems()
   }
 
   updateBoundaryIndex (scrollTop) {
-    const { bufferSize, data } = this.props
+    const { overscanCount, data } = this.props
     const rect = find(this.rects, rect => rect.getBottom() >= scrollTop)
 
     if (!rect) {
@@ -179,13 +179,13 @@ class VirtualizedList extends React.PureComponent {
 
     this.anchorItem = rect.getRectInfo()
 
-    const startIndex = Math.max(0, this.anchorItem.index - bufferSize)
+    const startIndex = Math.max(0, this.anchorItem.index - overscanCount)
 
     if (this.startIndex === startIndex) {
       return
     }
 
-    const endIndex = Math.min(this.anchorItem.index + this.visibleCount + bufferSize, data.length)
+    const endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, data.length)
 
     this.startIndex = startIndex
     this.endIndex = endIndex
@@ -203,7 +203,7 @@ class VirtualizedList extends React.PureComponent {
         this.setState({
           paddingBottom: 0
         })
-        this.props.onReachedBottom()
+        this.props.loadMoreItems()
       }
       return
     }
@@ -356,11 +356,11 @@ VirtualizedList.propTypes = {
   renderItem: PropTypes.func.isRequired,
   uniqueField: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
-  bufferSize: PropTypes.number,
+  overscanCount: PropTypes.number,
   height: PropTypes.number,
   estimatedItemHeight: PropTypes.number,
   className: PropTypes.string,
-  onReachedBottom: PropTypes.func,
+  loadMoreItems: PropTypes.func,
   onScroll: PropTypes.func,
   loadingComponent: PropTypes.node,
   endComponent: PropTypes.node,
@@ -374,8 +374,8 @@ VirtualizedList.defaultProps = {
   estimatedItemHeight: 175,
   className: '',
   renderItem: noop,
-  bufferSize: 5,
-  onReachedBottom: noop,
+  overscanCount: 5,
+  loadMoreItems: noop,
   onScroll: noop,
   loadingComponent: null,
   endComponent: null,
