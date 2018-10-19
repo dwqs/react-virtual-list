@@ -40,13 +40,12 @@ class Item extends React.PureComponent {
   }
 
   render () {
-    const { itemIndex, item } = this.props
+    const { itemIndex } = this.props
 
     return (
       <div className='item-wrapper' ref={this.setRef} style={{ minHeight: this.props.height }}>
         {
           this.props.renderItem({
-            data: item.data,
             index: itemIndex
           })
         }
