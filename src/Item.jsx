@@ -9,7 +9,7 @@ class Item extends React.PureComponent {
     super(props)
 
     this.listenerElementResize = this.listenerElementResize.bind(this)
-    this.resizeObserver = new ResizeObserver(this.listenerElementResize)
+    this.setRef = this.setRef.bind(this)
   }
 
   listenerElementResize (entries) {
@@ -24,9 +24,6 @@ class Item extends React.PureComponent {
   }
 
   setRef (node) {
-    if (this.resizeObserver && node) {
-      this.resizeObserver.observe(node)
-    }
     this.node = node
   }
 
@@ -34,14 +31,19 @@ class Item extends React.PureComponent {
     const { itemIndex, item } = this.props
 
     return (
-      <div className='item-wrapper' ref={node => this.setRef(node)} style={{ minHeight: this.props.height }}>
+      <div className='item-wrapper' ref={this.setRef} style={{ minHeight: this.props.height }}>
         { this.props.renderItem(item.data, itemIndex) }
       </div>
     )
   }
 
   componentDidMount () {
-    // this.cacheItemSize()
+    // Delay observer node until mount.
+    // This handles edge-cases where the component has already been unmounted before its ref has been set
+    if (this.node) {
+      this.resizeObserver = new ResizeObserver(this.listenerElementResize)
+      this.resizeObserver.observe(this.node)
+    }
   }
 
   componentWillUnmount () {
