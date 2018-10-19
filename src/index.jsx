@@ -96,8 +96,10 @@ class VirtualizedList extends React.PureComponent {
     this.scrollListener = throttle(createScheduler(this.handleScroll, requestAnimationFrame), 100, { trailing: true })
   }
 
-  updateItemPosition (rect, id, index, entries) {
+  updateItemPosition (args) {
+    const { rect, id, index, entries } = args
     const rectangle = this.rects[id]
+
     if (!rectangle || rectangle.getHeight() === rect.height) {
       return
     }

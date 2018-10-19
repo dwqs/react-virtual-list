@@ -26,7 +26,12 @@ class Item extends React.PureComponent {
     const { itemIndex, item, cacheInitialHeight } = this.props
     const rect = this.node.getBoundingClientRect()
     if (cacheInitialHeight[itemIndex] !== rect.height) {
-      this.props.updateItemPosition(rect, item.id, itemIndex, entries)
+      this.props.updateItemPosition({
+        rect,
+        id: item.id,
+        index: itemIndex,
+        entries
+      })
     }
   }
 
@@ -39,7 +44,12 @@ class Item extends React.PureComponent {
 
     return (
       <div className='item-wrapper' ref={this.setRef} style={{ minHeight: this.props.height }}>
-        { this.props.renderItem(item.data, itemIndex) }
+        {
+          this.props.renderItem({
+            data: item.data,
+            index: itemIndex
+          })
+        }
       </div>
     )
   }
