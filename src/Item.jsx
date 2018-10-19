@@ -18,9 +18,16 @@ class Item extends React.PureComponent {
     this.cacheItemSize(entries)
   }
 
-  cacheItemSize () {
-    const { itemIndex, item } = this.props
-    this.props.updateItemPosition(this.node, item.id, itemIndex)
+  cacheItemSize (entries) {
+    if (!this.node) {
+      return
+    }
+
+    const { itemIndex, item, cacheInitialHeight } = this.props
+    const rect = this.node.getBoundingClientRect()
+    if (cacheInitialHeight[itemIndex] !== rect.height) {
+      this.props.updateItemPosition(rect, item.id, itemIndex, entries)
+    }
   }
 
   setRef (node) {
@@ -41,6 +48,8 @@ class Item extends React.PureComponent {
     // Delay observer node until mount.
     // This handles edge-cases where the component has already been unmounted before its ref has been set
     if (this.node) {
+      this.cacheItemSize()
+
       this.resizeObserver = new ResizeObserver(this.listenerElementResize)
       this.resizeObserver.observe(this.node)
     }
@@ -59,13 +68,15 @@ Item.propTypes = {
   item: PropTypes.object.isRequired,
   renderItem: PropTypes.func,
   updateItemPosition: PropTypes.func,
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  cacheInitialHeight: PropTypes.object
 }
 
 Item.defaultProps = {
   renderItem: noop,
   updateItemPosition: noop,
-  height: 'auto'
+  height: 'auto',
+  cacheInitialHeight: {}
 }
 
 export default Item

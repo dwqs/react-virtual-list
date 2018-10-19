@@ -33,6 +33,9 @@ class VirtualizedList extends React.PureComponent {
     this.items = []
     this.rects = Object.create(null)
 
+    // cache initial height of item
+    this.cacheInitialHeight = Object.create(null)
+
     // Format item and set it default position info
     // TODO: memorized
     this.getFormatItems = computed(
@@ -93,12 +96,16 @@ class VirtualizedList extends React.PureComponent {
     this.scrollListener = throttle(createScheduler(this.handleScroll, requestAnimationFrame), 100, { trailing: true })
   }
 
-  updateItemPosition (node, id, index) {
-    if (!node || !this.rects[id]) {
+  updateItemPosition (rect, id, index, entries) {
+    const rectangle = this.rects[id]
+    if (!rectangle || rectangle.getHeight() === rect.height) {
       return
     }
 
-    const rect = node.getBoundingClientRect()
+    if (!entries) {
+      this.cacheInitialHeight[index] = rect.height
+    }
+
     // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
     // The value of top is relative to the top of the scroll container element
     const top = rect.top - this.containerTopValue + (this.el.scrollTop || window.pageYOffset)
@@ -246,7 +253,8 @@ class VirtualizedList extends React.PureComponent {
   }
 
   getRenderedItemHeight (index) {
-    const h = this.rects[this.items[index].id].getHeight()
+    const rectangle = this.rects[this.items[index].id]
+    const h = rectangle && rectangle.getHeight()
     if (h > 0) {
       return `${h}px`
     }
@@ -314,9 +322,10 @@ class VirtualizedList extends React.PureComponent {
                   key={item.id}
                   item={item}
                   itemIndex={this.startIndex + index}
-                  // height={`${this.getRenderedItemHeight(this.startIndex + index)}`}
+                  height={`${this.getRenderedItemHeight(this.startIndex + index)}`}
                   renderItem={this.props.renderItem}
                   updateItemPosition={this.updateItemPosition}
+                  cacheInitialHeight={this.cacheInitialHeight}
                 />
               )
             })
