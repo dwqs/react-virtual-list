@@ -4,7 +4,7 @@ import ResizeObserver from 'resize-observer-polyfill'
 
 import { noop } from './utils'
 
-class Item extends React.Component {
+class Item extends React.PureComponent {
   constructor (props) {
     super(props)
 
