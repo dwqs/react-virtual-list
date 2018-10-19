@@ -46,8 +46,9 @@ export default class App extends React.Component {
     this.loadNextPage = this.loadNextPage.bind(this)
   }
 
-  renderItem ({ data, index }) {
-    const { id, image, words, paragraphs } = data
+  renderItem ({ index }) {
+    const { id, image, words, paragraphs } = this.state.data[index]
+    // Needn't to set key prop
     return (
       <div className='list-item'>
         <p>#{index} {words}</p>
@@ -86,7 +87,7 @@ export default class App extends React.Component {
             estimatedItemHeight={180}
             loadingComponent={<LoadingComponent />}
             endComponent={<EndingComponent />}
-            onReachedBottom={this.loadNextPage}
+            loadMoreItems={this.loadNextPage}
             renderItem={this.renderItem}
           />
         </div>
