@@ -7,7 +7,7 @@ import VirtualizedList from '@src/index'
 import Image from './Image'
 
 const pageSize = 50
-const host = 'http://picsum.photos'
+const host = 'https://fillmurray.com' // 'http://picsum.photos'
 
 function fakerData (start = 0) {
   const a = []
@@ -81,9 +81,8 @@ export default class App extends React.Component {
         </a>
         <div className='list-container' id='container'>
           <VirtualizedList
-            uniqueField='id'
             hasMore={this.state.hasMore}
-            data={this.state.data}
+            itemCount={this.state.data.length}
             estimatedItemHeight={180}
             loadingComponent={<LoadingComponent />}
             endComponent={<EndingComponent />}
