@@ -1,11 +1,10 @@
 export default class Rectangle {
-  constructor ({ top = 0, left = 0, height = 0, width = 0, index = 0, id, defaultHeight } = {}) {
+  constructor ({ top = 0, left = 0, height = 0, width = 0, index = 0, defaultHeight } = {}) {
     this._top = top
     this._left = left
     this._height = height
     this._width = width
     this._index = index
-    this._id = id
     this._defaultHeight = defaultHeight || 0
   }
 
@@ -15,10 +14,6 @@ export default class Rectangle {
 
   getHeight () {
     return this._height
-  }
-
-  getId () {
-    return this._id
   }
 
   getBottom () {
@@ -35,7 +30,6 @@ export default class Rectangle {
       height: this._height,
       index: this._index,
       bottom: this._top + (this._height || this._defaultHeight),
-      id: this._id,
       left: this._left,
       width: this._width
     }
