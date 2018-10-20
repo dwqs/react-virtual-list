@@ -44,7 +44,6 @@
     "README.md"
   ],
   "dependencies": {
-    "lodash.find": "^4.6.0",
     "lodash.throttle": "^4.1.1",
     "resize-observer-polyfill": "^1.5.0"
   },
