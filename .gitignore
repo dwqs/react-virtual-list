@@ -49,3 +49,4 @@ reports
 .happypack
 package-lock.json
 dist
+!demo/dist
