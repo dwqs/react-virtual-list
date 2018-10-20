@@ -344,7 +344,6 @@ class VirtualizedList extends React.PureComponent {
 
 VirtualizedList.propTypes = {
   renderItem: PropTypes.func.isRequired,
-  data: PropTypes.array.isRequired,
   itemCount: PropTypes.number.isRequired,
   overscanCount: PropTypes.number,
   height: PropTypes.number,
