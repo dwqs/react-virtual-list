@@ -33,8 +33,8 @@ class VirtualizedList extends React.PureComponent {
     this.items = []
     this.rects = Object.create(null)
 
-    // cache initial height of item
-    this.cacheInitialHeight = Object.create(null)
+    // Cache initial height of item
+    this.cacheInitialHeight = []
 
     // Format item and set it default position info
     // TODO: memorized

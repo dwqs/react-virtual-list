@@ -78,14 +78,14 @@ Item.propTypes = {
   renderItem: PropTypes.func,
   updateItemPosition: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  cacheInitialHeight: PropTypes.object
+  cacheInitialHeight: PropTypes.array
 }
 
 Item.defaultProps = {
   renderItem: noop,
   updateItemPosition: noop,
   height: 'auto',
-  cacheInitialHeight: {}
+  cacheInitialHeight: []
 }
 
 export default Item
