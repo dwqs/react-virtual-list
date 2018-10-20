@@ -49,8 +49,7 @@ export default class Hello extends Component {
   render () {
     return (
       <VirtualizedList
-        uniqueField='id'
-        data={this.data}
+        itemCount={this.data.length}
         estimatedItemHeight={20}
         renderItem={this.renderItem}
       />
