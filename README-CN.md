@@ -48,8 +48,7 @@ export default class Hello extends Component {
   render () {
     return (
       <VirtualizedList
-        uniqueField='id'
-        data={this.data}
+        itemCount={this.data.length}
         estimatedItemHeight={20}
         renderItem={this.renderItem}
       />
@@ -63,8 +62,7 @@ export default class Hello extends Component {
 ## Prop Types
 |Property|Type|Default|Required?|Description|
 |:--:|:--:|:--:|:--:|:--:|
-|data|Array||✓|对象数组|
-|uniqueField|String||✓|对象的唯一字段，例如 id|
+|itemCount|Number||✓|需要渲染的数据个数|
 |renderItem|Function||✓|渲染列表项元素的函数: `({index: number}): React.PropTypes.node`|
 |overscanCount|Number|5||在可见区域之外的上/下方渲染的 Buffer 值，调整这个值可以避免部分设备上的滚动那个闪烁|
 |estimatedItemHeight|Number|175||列表项的预估高度|
