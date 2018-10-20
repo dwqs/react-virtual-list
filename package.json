@@ -1,6 +1,6 @@
 {
   "name": "@dwqs/react-virtual-list",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "A tiny virtualization list component, supports variable height",
   "author": "pomysky@gmail.com",
   "license": "MIT",
