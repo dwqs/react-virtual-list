@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import throttle from 'lodash.throttle'
-import find from 'lodash.find'
 
 import Item from './Item'
 import Rectangle from './Rectangle'
@@ -14,7 +13,7 @@ class VirtualizedList extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      renderItems: [],
+      renderedItems: [],
       paddingBottom: 0,
       paddingTop: 0
     }
@@ -30,45 +29,33 @@ class VirtualizedList extends React.PureComponent {
       }
     }
 
-    this.items = []
-    this.rects = Object.create(null)
+    // Cache position info of item rendered
+    this.rects = []
 
     // Cache initial height of item
     this.cacheInitialHeight = []
 
-    // Format item and set it default position info
+    // Set default position info of item
     // TODO: memorized
-    this.getFormatItems = computed(
+    this.updateRects = computed(
       this,
-      props => props.data,
-      props => props.uniqueField,
+      props => props.itemCount,
       props => props.estimatedItemHeight,
-      (data, uniqueField, defaultHeight) => {
-        const res = [].concat(this.items)
-        const length = res.length
-        const lastItem = res[length - 1]
-        const lastRect = lastItem ? this.rects[lastItem.id] : null
+      (itemCount, defaultHeight) => {
+        const length = this.rects.length
+        const lastRect = this.rects[length - 1] || null
 
         let top = lastRect ? lastRect.getBottom() : 0
-        for (let i = length; i < data.length; i++) {
-          const item = data[i]
-          res.push({
-            id: item[uniqueField],
-            data: item
-          })
-
-          this.rects[item[uniqueField]] = new Rectangle({
+        for (let i = length; i < itemCount; i++) {
+          this.rects.push(new Rectangle({
             top,
             height: 0,
             index: i,
-            id: item[uniqueField],
             defaultHeight
-          })
+          }))
 
           top += defaultHeight
         }
-
-        return res
       }
     )
 
@@ -76,7 +63,7 @@ class VirtualizedList extends React.PureComponent {
     this.endIndex = 0
     this.scrollTop = 0
     this.containerTopValue = 0
-    this.isLoadingNextPageData = false
+    this.isLoadingMoreItems = false
 
     this.timer = null
     this.doc = null
@@ -87,8 +74,7 @@ class VirtualizedList extends React.PureComponent {
     this.anchorItem = {
       index: 0,
       top: 0,
-      bottom: 0,
-      id: undefined
+      bottom: 0
     }
 
     this.updateItemPosition = this.updateItemPosition.bind(this)
@@ -97,8 +83,8 @@ class VirtualizedList extends React.PureComponent {
   }
 
   updateItemPosition (args) {
-    const { rect, id, index, entries } = args
-    const rectangle = this.rects[id]
+    const { rect, index, entries } = args
+    const rectangle = this.rects[index]
 
     if (!rectangle || rectangle.getHeight() === rect.height) {
       return
@@ -116,12 +102,11 @@ class VirtualizedList extends React.PureComponent {
       this.anchorItem = {
         index,
         top,
-        id,
         bottom: top + rect.height
       }
     }
 
-    this.rects[id].updateRectInfo({
+    rectangle.updateRectInfo({
       top,
       height: rect.height,
       index
@@ -130,13 +115,18 @@ class VirtualizedList extends React.PureComponent {
 
   getRenderItems (callback = noop) {
     // Get the render data
-    const { estimatedItemHeight } = this.props
-    const visibleData = this.items.slice(this.startIndex, this.endIndex)
+    const { estimatedItemHeight, itemCount } = this.props
+    const res = []
+
+    for (let i = this.startIndex; i < this.endIndex; i++) {
+      // placeholder
+      res.push(i)
+    }
 
     this.setState({
-      paddingTop: this.rects[this.items[this.startIndex].id].getTop() - this.rects[this.items[0].id].getTop(),
-      renderItems: [].concat(visibleData),
-      paddingBottom: (this.items.length - this.endIndex) * estimatedItemHeight
+      paddingTop: this.rects[this.startIndex].getTop() - this.rects[0].getTop(),
+      renderedItems: res,
+      paddingBottom: (itemCount - this.endIndex) * estimatedItemHeight
     }, () => {
       callback()
     })
@@ -150,18 +140,18 @@ class VirtualizedList extends React.PureComponent {
   }
 
   initVisibleData () {
-    const { data, overscanCount } = this.props
-    this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, data.length)
+    const { itemCount, overscanCount } = this.props
+    this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, itemCount)
 
     this.getRenderItems()
   }
 
   updateVisibleData () {
-    this.isLoadingNextPageData = false
-    const { overscanCount, data } = this.props
+    this.isLoadingMoreItems = false
+    const { overscanCount, itemCount } = this.props
 
     if (this.startIndex === 0) {
-      this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, data.length)
+      this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, itemCount)
     } else {
       this.endIndex = this.endIndex + overscanCount
     }
@@ -170,8 +160,8 @@ class VirtualizedList extends React.PureComponent {
   }
 
   updateBoundaryIndex (scrollTop) {
-    const { overscanCount, data } = this.props
-    const rect = find(this.rects, rect => rect.getBottom() >= scrollTop)
+    const { overscanCount, itemCount } = this.props
+    const rect = this.rects.filter(rect => rect.getBottom() >= scrollTop)[0]
 
     if (!rect) {
       return
@@ -185,21 +175,21 @@ class VirtualizedList extends React.PureComponent {
       return
     }
 
-    const endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, data.length)
+    const endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, itemCount)
 
     this.startIndex = startIndex
     this.endIndex = endIndex
   }
 
   scrollUp (scrollTop) {
-    const { hasMore } = this.props
+    const { hasMore, itemCount } = this.props
 
     // Hand is scrolling up, scrollTop is increasing
     scrollTop = scrollTop || 0
 
-    if (this.endIndex >= this.props.data.length) {
-      if (!this.isLoadingNextPageData && hasMore) {
-        this.isLoadingNextPageData = true
+    if (this.endIndex >= itemCount) {
+      if (!this.isLoadingMoreItems && hasMore) {
+        this.isLoadingMoreItems = true
         this.setState({
           paddingBottom: 0
         })
@@ -255,9 +245,10 @@ class VirtualizedList extends React.PureComponent {
   }
 
   getRenderedItemHeight (index) {
-    const rectangle = this.rects[this.items[index].id]
+    const rectangle = this.rects[index]
     const h = rectangle && rectangle.getHeight()
-    if (h > 0) {
+
+    if (this.cacheInitialHeight[index] !== h && h > 0) {
       return `${h}px`
     }
     // 对于Viewport内的数据返回高度一直是 auto, 一是保持自适应，二是能触发element resize事件
@@ -291,8 +282,8 @@ class VirtualizedList extends React.PureComponent {
     // compute visible count once
     this.computeVisibleCount()
 
-    if (this.props.data.length) {
-      this.items = this.getFormatItems(this.props)
+    if (this.props.itemCount) {
+      this.updateRects(this.props)
       this.initVisibleData()
     }
 
@@ -303,10 +294,10 @@ class VirtualizedList extends React.PureComponent {
   }
 
   render () {
-    const { className, loadingComponent, endComponent, hasMore, data } = this.props
-    const { paddingBottom, paddingTop, renderItems } = this.state
+    const { className, loadingComponent, endComponent, hasMore, itemCount } = this.props
+    const { paddingBottom, paddingTop, renderedItems } = this.state
 
-    if (!data.length && hasMore) {
+    if (!itemCount && hasMore) {
       return (
         <div className={className} style={this.style} ref={node => { this.wrapper = node }}>
           {loadingComponent}
@@ -318,13 +309,12 @@ class VirtualizedList extends React.PureComponent {
       <div className={className} style={this.style} ref={node => { this.wrapper = node }}>
         <div style={{ paddingBottom: paddingBottom + 'px', paddingTop: paddingTop + 'px' }}>
           {
-            renderItems.map((item, index) => {
+            renderedItems.map(val => {
               return (
                 <Item
-                  key={item.id}
-                  item={item}
-                  itemIndex={this.startIndex + index}
-                  height={`${this.getRenderedItemHeight(this.startIndex + index)}`}
+                  key={val}
+                  itemIndex={val}
+                  height={`${this.getRenderedItemHeight(val)}`}
                   renderItem={this.props.renderItem}
                   updateItemPosition={this.updateItemPosition}
                   cacheInitialHeight={this.cacheInitialHeight}
@@ -333,7 +323,7 @@ class VirtualizedList extends React.PureComponent {
             })
           }
           {
-            hasMore && data.length ? loadingComponent : !hasMore ? endComponent : null
+            hasMore && itemCount ? loadingComponent : !hasMore ? endComponent : null
           }
         </div>
       </div>
@@ -341,8 +331,8 @@ class VirtualizedList extends React.PureComponent {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (prevProps.data.length !== this.props.data.length) {
-      this.items = this.getFormatItems(this.props)
+    if (prevProps.itemCount !== this.props.itemCount) {
+      this.updateRects(this.props)
       this.updateVisibleData()
     }
   }
@@ -354,8 +344,8 @@ class VirtualizedList extends React.PureComponent {
 
 VirtualizedList.propTypes = {
   renderItem: PropTypes.func.isRequired,
-  uniqueField: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
+  itemCount: PropTypes.number.isRequired,
   overscanCount: PropTypes.number,
   height: PropTypes.number,
   estimatedItemHeight: PropTypes.number,
@@ -370,7 +360,6 @@ VirtualizedList.propTypes = {
 }
 
 VirtualizedList.defaultProps = {
-  data: [],
   estimatedItemHeight: 175,
   className: '',
   renderItem: noop,
