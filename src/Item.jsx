@@ -23,12 +23,11 @@ class Item extends React.PureComponent {
       return
     }
 
-    const { itemIndex, item, cacheInitialHeight } = this.props
+    const { itemIndex, cacheInitialHeight } = this.props
     const rect = this.node.getBoundingClientRect()
     if (cacheInitialHeight[itemIndex] !== rect.height) {
       this.props.updateItemPosition({
         rect,
-        id: item.id,
         index: itemIndex,
         entries
       })
@@ -74,7 +73,6 @@ class Item extends React.PureComponent {
 
 Item.propTypes = {
   itemIndex: PropTypes.any.isRequired,
-  item: PropTypes.object.isRequired,
   renderItem: PropTypes.func,
   updateItemPosition: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
