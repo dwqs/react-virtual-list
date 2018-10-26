@@ -22,6 +22,7 @@ describe('VirtualizedList', () => {
   function getComponent(props = {}) {
     return (
       <VirtualizedList
+        className='container'
         useWindow={false}
         height={HEIGHT}
         overscanCount={0}
@@ -33,20 +34,39 @@ describe('VirtualizedList', () => {
     )
   }
 
-  describe('number of rendered children', () => {
-    it('renders enough children to fill the view', () => {
-      const wrapper = mount(getComponent())
-      // eslint-disable-next-line
-      // const rendered = findDOMNode(renderToDoc(getComponent()))
-      // const testInstance = ReactTestUtils.renderIntoDocument(getComponent())
-      // // const testInstance = testRenderer.root
-      // const divs = ReactTestUtils.findRenderedDOMComponentWithClass(testInstance, 'list-item')
-      // console.log('----', divs)
-      // wrapper.update()
-      const divs = wrapper.find('.list-item')
-      console.log('----', divs.length)
-      // HEIGHT / ITEM_HEIGHT
-      expect([1,2,3]).toHaveLength(3);
+  let wrapper = null
+
+  beforeEach(() => {
+    wrapper = mount(getComponent())
+  })
+
+  afterEach(() => {
+    wrapper = null
+  })
+
+  describe('normaly render', () => {
+    it('calls the componentDidMount function when it is created', () => {
+      const componentDidMountSpy = jest.spyOn(VirtualizedList.prototype, 'componentDidMount')
+      mount(getComponent())
+      expect(componentDidMountSpy).toHaveBeenCalledTimes(1)
+      componentDidMountSpy.mockRestore()
     })
+
+    it('correct instance', () => {
+      const inst = wrapper.instance()
+      expect(inst).toBeInstanceOf(VirtualizedList)
+    })
+
+    it('correct container element', () => {
+      expect(wrapper.exists('.container')).toBeTruthy()
+    })
+  })
+
+  describe('number of rendered children', () => {
+    /**
+    * there are some issues about component update after v3
+    * https://github.com/airbnb/enzyme/issues/1245
+    * https://github.com/airbnb/enzyme/issues/1543
+    **/
   })
 })
