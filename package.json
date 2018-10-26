@@ -7,7 +7,7 @@
   "private": false,
   "main": "dist/index.js",
   "scripts": {
-    "prepush": "npm run ilint -q",
+    "prepush": "npm run ilint -q && npm run test",
     "dev": "npx cross-env NODE_ENV=development node ./build/dev-server.js",
     "prod": "npx rimraf demo/dist && npx cross-env NODE_ENV=production npx webpack --config ./build/webpack.prod.config.js --progress --hide-modules",
     "postprod": "mv ./demo/dist/index.html ./",
