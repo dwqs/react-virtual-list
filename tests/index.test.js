@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { findDOMNode } from 'react-dom'
+import Enzyme, { mount } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
 
-import { renderToDoc } from './testUtils'
+Enzyme.configure({ adapter: new Adapter() })
 
 import VirtualizedList from '../src/index'
 
@@ -34,9 +35,16 @@ describe('VirtualizedList', () => {
 
   describe('number of rendered children', () => {
     it('renders enough children to fill the view', () => {
+      const wrapper = mount(getComponent())
       // eslint-disable-next-line
-      const rendered = findDOMNode(renderToDoc(getComponent()))
-      console.log('----', rendered.querySelectorAll('.list-item').length)
+      // const rendered = findDOMNode(renderToDoc(getComponent()))
+      // const testInstance = ReactTestUtils.renderIntoDocument(getComponent())
+      // // const testInstance = testRenderer.root
+      // const divs = ReactTestUtils.findRenderedDOMComponentWithClass(testInstance, 'list-item')
+      // console.log('----', divs)
+      // wrapper.update()
+      const divs = wrapper.find('.list-item')
+      console.log('----', divs.length)
       // HEIGHT / ITEM_HEIGHT
       expect([1,2,3]).toHaveLength(3);
     })
