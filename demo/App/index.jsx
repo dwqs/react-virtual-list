@@ -26,11 +26,11 @@ function fakerData (start = 0) {
   return a
 }
 
-const LoadingComponent = () => {
+const onLoading = () => {
   return <div className='loading'>Loading...</div>
 }
 
-const EndingComponent = () => {
+const onEnded = () => {
   return <div className='ending'>No more data.</div>
 }
 
@@ -97,8 +97,8 @@ export default class App extends React.Component {
             hasMore={this.state.hasMore}
             itemCount={this.state.data.length}
             estimatedItemHeight={180}
-            loadingComponent={<LoadingComponent />}
-            endComponent={<EndingComponent />}
+            onLoading={onLoading}
+            onEnded={onEnded}
             noContentRenderer={noContentRenderer}
             loadMoreItems={this.loadNextPage}
             renderItem={this.renderItem}

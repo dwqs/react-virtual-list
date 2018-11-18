@@ -8,7 +8,7 @@ import Rectangle from './Rectangle'
 
 import createScheduler from './createScheduler'
 import computed from './computed'
-import { isSupportPassive, noop, requestAnimationFrame } from './utils'
+import { isSupportPassive, noop, requestAnimationFrame, renderNull } from './utils'
 
 import {
   DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
@@ -346,8 +346,8 @@ class VirtualizedList extends React.PureComponent {
   render () {
     const {
       className,
-      loadingComponent,
-      endComponent,
+      onLoading,
+      onEnded,
       hasMore,
       itemCount,
       noContentRenderer
@@ -357,7 +357,7 @@ class VirtualizedList extends React.PureComponent {
     if (!itemCount && hasMore) {
       return (
         <div className={className} style={this.style} ref={node => { this.wrapper = node }}>
-          {loadingComponent}
+          {onLoading()}
         </div>
       )
     }
@@ -374,7 +374,7 @@ class VirtualizedList extends React.PureComponent {
               <Status ref={node => { this.status = node }}>
                 {
                   ({ status }) => {
-                    return status === ENDING ? endComponent : status === LOADING ? loadingComponent : null
+                    return status === ENDING ? onEnded() : status === LOADING ? onLoading() : null
                   }
                 }
               </Status>
@@ -410,8 +410,8 @@ VirtualizedList.propTypes = {
   loadMoreItems: PropTypes.func,
   noContentRenderer: PropTypes.func,
   onScroll: PropTypes.func,
-  loadingComponent: PropTypes.node,
-  endComponent: PropTypes.node,
+  onLoading: PropTypes.func,
+  onEnded: PropTypes.func,
   hasMore: PropTypes.bool,
   useWindow: PropTypes.bool,
   scrollableTarget: PropTypes.string
@@ -424,9 +424,9 @@ VirtualizedList.defaultProps = {
   overscanCount: 5,
   loadMoreItems: noop,
   onScroll: noop,
-  noContentRenderer: () => null,
-  loadingComponent: null,
-  endComponent: null,
+  noContentRenderer: renderNull,
+  onLoading: renderNull,
+  onEnded: renderNull,
   hasMore: false,
   useWindow: true // Recommend set it to true on mobile device for better scrolls performance
 }
