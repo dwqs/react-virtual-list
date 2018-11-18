@@ -18,13 +18,14 @@ class VirtualizedList extends React.PureComponent {
       paddingTop: 0
     }
 
-    this.style = {}
+    this.style = {
+      WebkitOverflowScrolling: 'touch'
+    }
 
     if (!isNaN(props.height)) {
       this.style = {
         overflowY: 'auto',
         overflowX: 'hidden',
-        WebkitOverflowScrolling: 'touch',
         height: `${props.height}px`
       }
     }
