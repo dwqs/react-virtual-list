@@ -39,7 +39,7 @@ export default class Hello extends Component {
     this.renderItem = this.renderItem.bind(this)
   }
 
-  renderItem ({index}) {
+  renderItem ({index, isScrolling}) {
     const item = this.data[index]
     return (
       <div>#{index}, {item.val}</div>
@@ -64,7 +64,7 @@ Check out the online demo [here](https://dwqs.github.io/react-virtual-list/)
 |Property|Type|Default|Required?|Description|
 |:--:|:--:|:--:|:--:|:--:|
 |itemCount|Number||✓|The number of items you want to render|
-|renderItem|Function||✓|Responsible for rendering an item given its index and itself: `({index: number}):React.PropTypes.node`|
+|renderItem|Function||✓|Responsible for rendering an item given its index and itself: `({index: number, isScrolling: boolean}):React.PropTypes.node`|
 |overscanCount|Number|5||Number of extra buffer items to render above/below the visible items. Tweaking this can help reduce scroll flickering on certain browsers/devices|
 |estimatedItemHeight|Number|175||The estimated height of the list item element, which is used to estimate the total height of the list before all of its items have actually been measured|
 |className|String|''||Class names of the wrapper element|

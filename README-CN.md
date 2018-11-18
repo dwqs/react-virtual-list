@@ -38,7 +38,7 @@ export default class Hello extends Component {
     this.renderItem = this.renderItem.bind(this)
   }
 
-  renderItem ({index}) {
+  renderItem ({index, isScrolling}) {
     const item = this.data[index]
     return (
       <div>#{index}, {item.val}</div>
@@ -63,7 +63,7 @@ export default class Hello extends Component {
 |Property|Type|Default|Required?|Description|
 |:--:|:--:|:--:|:--:|:--:|
 |itemCount|Number||✓|需要渲染的数据个数|
-|renderItem|Function||✓|渲染列表项元素的函数: `({index: number}): React.PropTypes.node`|
+|renderItem|Function||✓|渲染列表项元素的函数: `({index: number, isScrolling: boolean}): React.PropTypes.node`|
 |overscanCount|Number|5||在可见区域之外的上/下方渲染的 Buffer 值，调整这个值可以避免部分设备上的滚动那个闪烁|
 |estimatedItemHeight|Number|175||列表项的预估高度|
 |className|String|''||设置包裹元素的 className|
