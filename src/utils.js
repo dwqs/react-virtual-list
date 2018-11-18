@@ -1,4 +1,5 @@
 export const noop = () => {}
+export const renderNull = () => null
 
 export const isSupportPassive = () => {
   let supportsPassive = false
