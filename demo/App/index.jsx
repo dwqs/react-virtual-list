@@ -34,6 +34,10 @@ const EndingComponent = () => {
   return <div className='ending'>No more data.</div>
 }
 
+function noContentRenderer () {
+  return <div className='ending'>No data to render.</div>
+}
+
 export default class App extends React.Component {
   constructor (props) {
     super(props)
@@ -68,6 +72,15 @@ export default class App extends React.Component {
     }, 2000)
   }
 
+  // componentDidMount () {
+  //   setTimeout(() => {
+  //     this.setState({
+  //       data: [],
+  //       hasMore: false
+  //     })
+  //   }, 2000)
+  // }
+
   render () {
     return (
       <div className='demo-wrap'>
@@ -86,6 +99,7 @@ export default class App extends React.Component {
             estimatedItemHeight={180}
             loadingComponent={<LoadingComponent />}
             endComponent={<EndingComponent />}
+            noContentRenderer={noContentRenderer}
             loadMoreItems={this.loadNextPage}
             renderItem={this.renderItem}
           />
