@@ -9,13 +9,15 @@ import createScheduler from './createScheduler'
 import computed from './computed'
 import { isSupportPassive, noop, requestAnimationFrame } from './utils'
 
+const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150
+
 class VirtualizedList extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      renderedItems: [],
       paddingBottom: 0,
-      paddingTop: 0
+      paddingTop: 0,
+      isScrolling: false
     }
 
     this.style = {
@@ -114,20 +116,13 @@ class VirtualizedList extends React.PureComponent {
     })
   }
 
-  getRenderItems (callback = noop) {
-    // Get the render data
+  updatePaddingValOfContainer (isScrolling = true, callback = noop) {
     const { estimatedItemHeight, itemCount } = this.props
-    const res = []
-
-    for (let i = this.startIndex; i < this.endIndex; i++) {
-      // placeholder
-      res.push(i)
-    }
 
     this.setState({
       paddingTop: this.rects[this.startIndex].getTop() - this.rects[0].getTop(),
-      renderedItems: res,
-      paddingBottom: (itemCount - this.endIndex) * estimatedItemHeight
+      paddingBottom: (itemCount - this.endIndex) * estimatedItemHeight,
+      isScrolling
     }, () => {
       callback()
     })
@@ -144,7 +139,7 @@ class VirtualizedList extends React.PureComponent {
     const { itemCount, overscanCount } = this.props
     this.endIndex = Math.min(this.anchorItem.index + this.visibleCount + overscanCount, itemCount)
 
-    this.getRenderItems()
+    this.updatePaddingValOfContainer(false)
   }
 
   updateVisibleData () {
@@ -157,7 +152,7 @@ class VirtualizedList extends React.PureComponent {
       this.endIndex = this.endIndex + overscanCount
     }
 
-    this.getRenderItems()
+    this.updatePaddingValOfContainer(false)
   }
 
   updateBoundaryIndex (scrollTop) {
@@ -201,7 +196,7 @@ class VirtualizedList extends React.PureComponent {
 
     if (scrollTop > this.anchorItem.bottom) {
       this.updateBoundaryIndex(scrollTop)
-      this.getRenderItems()
+      this.updatePaddingValOfContainer()
     }
   }
 
@@ -211,7 +206,7 @@ class VirtualizedList extends React.PureComponent {
 
     if (scrollTop < this.anchorItem.top) {
       this.updateBoundaryIndex(scrollTop)
-      this.getRenderItems()
+      this.updatePaddingValOfContainer()
     }
   }
 
@@ -222,6 +217,12 @@ class VirtualizedList extends React.PureComponent {
       this.doc = this.el === document.defaultView ? (window.document.body.scrollTop ? window.document.body : window.document.documentElement) : this.el
     }
 
+    // On iOS, we can arrive at negative offsets by swiping past the start.
+    // To prevent flicker here, we make playing in the negative offset zone cause nothing to happen.
+    if (this.doc.scrollTop < 0) {
+      return
+    }
+
     this.props.onScroll({
       scrollTop: this.doc.scrollTop
     })
@@ -230,7 +231,7 @@ class VirtualizedList extends React.PureComponent {
     this.timer && clearTimeout(this.timer)
     this.timer = setTimeout(() => {
       this.handleScrollEnd()
-    }, 300)
+    }, DEFAULT_SCROLLING_RESET_TIME_INTERVAL)
 
     const curScrollTop = this.doc.scrollTop
     if (curScrollTop > this.scrollTop) {
@@ -243,6 +244,9 @@ class VirtualizedList extends React.PureComponent {
 
   handleScrollEnd () {
     // Do something, when scroll stop
+    this.setState({
+      isScrolling: false
+    })
   }
 
   getRenderedItemHeight (index) {
@@ -254,6 +258,30 @@ class VirtualizedList extends React.PureComponent {
     }
     // 对于Viewport内的数据返回高度一直是 auto, 一是保持自适应，二是能触发element resize事件
     return 'auto'
+  }
+
+  calculateChildrenToDisplay () {
+    const childs = []
+
+    if (!this.isReady) {
+      return childs
+    }
+
+    for (let i = this.startIndex; i < this.endIndex; i++) {
+      childs.push(
+        <Item
+          key={i}
+          itemIndex={i}
+          height={`${this.getRenderedItemHeight(i)}`}
+          renderItem={this.props.renderItem}
+          isScrolling={this.state.isScrolling}
+          updateItemPosition={this.updateItemPosition}
+          cacheInitialHeight={this.cacheInitialHeight}
+        />
+      )
+    }
+
+    return childs
   }
 
   getScrollableElement () {
@@ -272,6 +300,8 @@ class VirtualizedList extends React.PureComponent {
   }
 
   componentDidMount () {
+    this.isReady = true
+
     if (!this.el) {
       this.el = this.getScrollableElement()
     }
@@ -295,8 +325,15 @@ class VirtualizedList extends React.PureComponent {
   }
 
   render () {
-    const { className, loadingComponent, endComponent, hasMore, itemCount } = this.props
-    const { paddingBottom, paddingTop, renderedItems } = this.state
+    const {
+      className,
+      loadingComponent,
+      endComponent,
+      hasMore,
+      itemCount,
+      noContentRenderer
+    } = this.props
+    const { paddingBottom, paddingTop } = this.state
 
     if (!itemCount && hasMore) {
       return (
@@ -306,27 +343,22 @@ class VirtualizedList extends React.PureComponent {
       )
     }
 
+    const childrenToDisplay = this.calculateChildrenToDisplay()
+    const showNoContentRenderer = childrenToDisplay.length === 0
+
     return (
       <div className={className} style={this.style} ref={node => { this.wrapper = node }}>
-        <div style={{ paddingBottom: paddingBottom + 'px', paddingTop: paddingTop + 'px' }}>
-          {
-            renderedItems.map(val => {
-              return (
-                <Item
-                  key={val}
-                  itemIndex={val}
-                  height={`${this.getRenderedItemHeight(val)}`}
-                  renderItem={this.props.renderItem}
-                  updateItemPosition={this.updateItemPosition}
-                  cacheInitialHeight={this.cacheInitialHeight}
-                />
-              )
-            })
-          }
-          {
-            hasMore && itemCount ? loadingComponent : !hasMore ? endComponent : null
-          }
-        </div>
+        {
+          !showNoContentRenderer && (
+            <div style={{ paddingBottom: paddingBottom + 'px', paddingTop: paddingTop + 'px' }}>
+              {childrenToDisplay}
+              {
+                hasMore && itemCount ? loadingComponent : !hasMore ? endComponent : null
+              }
+            </div>
+          )
+        }
+        { showNoContentRenderer && noContentRenderer() }
       </div>
     )
   }
@@ -340,6 +372,7 @@ class VirtualizedList extends React.PureComponent {
 
   componentWillUnmount () {
     this.el.removeEventListener('scroll', this.scrollListener)
+    clearTimeout(this.timer)
   }
 }
 
@@ -351,6 +384,7 @@ VirtualizedList.propTypes = {
   estimatedItemHeight: PropTypes.number,
   className: PropTypes.string,
   loadMoreItems: PropTypes.func,
+  noContentRenderer: PropTypes.func,
   onScroll: PropTypes.func,
   loadingComponent: PropTypes.node,
   endComponent: PropTypes.node,
@@ -366,6 +400,7 @@ VirtualizedList.defaultProps = {
   overscanCount: 5,
   loadMoreItems: noop,
   onScroll: noop,
+  noContentRenderer: () => null,
   loadingComponent: null,
   endComponent: null,
   hasMore: false,
