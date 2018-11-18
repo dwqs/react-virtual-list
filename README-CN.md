@@ -69,12 +69,13 @@ export default class Hello extends Component {
 |className|String|''||设置包裹元素的 className|
 |onScroll|Function|() => {}||滚动容器的 scrollTop 发生改变时触发: `({scrollTop: number}):void`|
 |loadMoreItems|Function|() => {}||用于无限滚动。当需要加载更多数据时触发|
-|loadingComponent|React.PropTypes.node|null||用于无限滚动。当在加载下一页数据时显示的 Loading 组件|
-|endComponent|React.PropTypes.node|null||用于无限滚动。当没有更多可加载的数据时显示的组件|
+|onLoading|Function|() => null||用于无限滚动。当在加载下一页数据时显示的 Loading 组件|
+|onEnded|Function|() => null||用于无限滚动。当没有更多可加载的数据时显示的组件|
 |hasMore|Boolean|false||用于无限滚动。表示是否有更多数据需要加载|
 |height|Number|undefined||包裹元素的高度. 如果属性 `useWindow` 是 `false` 并且未设置 `scrollableTarget`, 包裹元素会成为滚动容器|
 |useWindow|Boolean|true||是否使 Window 成为滚动容器，此时会监听 `window` 上的 `scroll` 事件。在移动端建议使用|
 |scrollableTarget|String|undefined||设置滚动容器元素, 其值会用于 `document.getElementById`。Window 是默认的滚动容器。如果要自定义滚动容器，需要将属性 `useWindow` 置为 `false`，并且不要设置 `height` 属性 |
+|noContentRenderer|Function|() => null||当 `itemCount` 的值是 0 时，会调用这个回调|
 
 ## Development
 ```shell

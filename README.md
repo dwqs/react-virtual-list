@@ -70,12 +70,13 @@ Check out the online demo [here](https://dwqs.github.io/react-virtual-list/)
 |className|String|''||Class names of the wrapper element|
 |onScroll|Function|() => {}||Callback invoked whenever the scroll offset changes within the inner scrollable region: `({scrollTop: number}):void`|
 |loadMoreItems|Function|() => {}||Used to infinite scroll. Callback to be invoked when more items must be loaded|
-|loadingComponent|React.PropTypes.node|null||Used to infinite scroll. The component will show when loading next page data|
-|endComponent|React.PropTypes.node|null||Used to infinite scroll. The component will show when no more data to load|
+|onLoading|Function|() => null||Used to infinite scroll. The component will show when loading next page data|
+|onEnded|Function|() => null||Used to infinite scroll. The component will show when no more data to load|
 |hasMore|Boolean|false||Used to infinite scroll. Whether has more data to load|
 |height|Number|undefined||Height of the wrapper element. If `useWindow` is `false` and `scrollableTarget` is undefined, the wrapper element will be the scrollable target|
 |useWindow|Boolean|true||Whether to set the `window` to scrollable target |
 |scrollableTarget|String|undefined||Set the scrollable target, whose value is used to `document.getElementById`. `window` is the default scrollable target, so if you want to change it, you need to set `useWindow` to `false` and dont set the `height` prop |
+|noContentRenderer|Function|() => null||Callback used to render placeholder content when `itemCount` is 0|
 
 ## Development
 ```shell
