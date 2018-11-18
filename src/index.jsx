@@ -3,13 +3,17 @@ import PropTypes from 'prop-types'
 import throttle from 'lodash.throttle'
 
 import Item from './Item'
+import Status from './Status'
 import Rectangle from './Rectangle'
 
 import createScheduler from './createScheduler'
 import computed from './computed'
 import { isSupportPassive, noop, requestAnimationFrame } from './utils'
 
-const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150
+import {
+  DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
+  LOADING, ENDING
+} from './constant'
 
 class VirtualizedList extends React.PureComponent {
   constructor (props) {
@@ -189,6 +193,8 @@ class VirtualizedList extends React.PureComponent {
         this.setState({
           paddingBottom: 0
         })
+
+        this.updateLoadingStatus(LOADING)
         this.props.loadMoreItems()
       }
       return
@@ -247,6 +253,15 @@ class VirtualizedList extends React.PureComponent {
     this.setState({
       isScrolling: false
     })
+  }
+
+  updateLoadingStatus (status) {
+    if (!this.props.hasMore) {
+      this.status.changeStatus(ENDING)
+      return
+    }
+
+    this.status.changeStatus(status)
   }
 
   getRenderedItemHeight (index) {
@@ -352,8 +367,18 @@ class VirtualizedList extends React.PureComponent {
           !showNoContentRenderer && (
             <div style={{ paddingBottom: paddingBottom + 'px', paddingTop: paddingTop + 'px' }}>
               {childrenToDisplay}
+              <Status ref={node => { this.status = node }}>
+                {
+                  ({ status }) => {
+                    return status === ENDING ? endComponent : status === LOADING ? loadingComponent : null
+                  }
+                }
+              </Status>
               {
-                hasMore && itemCount ? loadingComponent : !hasMore ? endComponent : null
+                // hasMore && itemCount ? loadingComponent : !hasMore ? endComponent : null
+              }
+              {
+                // status === 'ending' ? endComponent : status === 'loading' ? loadingComponent : null
               }
             </div>
           )
@@ -367,6 +392,7 @@ class VirtualizedList extends React.PureComponent {
     if (prevProps.itemCount !== this.props.itemCount) {
       this.updateRects(this.props)
       this.updateVisibleData()
+      this.updateLoadingStatus('')
     }
   }
 
