@@ -374,12 +374,6 @@ class VirtualizedList extends React.PureComponent {
                   }
                 }
               </Status>
-              {
-                // hasMore && itemCount ? loadingComponent : !hasMore ? endComponent : null
-              }
-              {
-                // status === 'ending' ? endComponent : status === 'loading' ? loadingComponent : null
-              }
             </div>
           )
         }
