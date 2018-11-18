@@ -68,7 +68,7 @@ class VirtualizedList extends React.PureComponent {
 
     this.timer = null
     this.doc = null
-    this.el = null
+    this.el = null // scrollable container element
 
     // The info of anchor element
     // which is the first element in visible range
