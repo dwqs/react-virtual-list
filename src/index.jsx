@@ -256,6 +256,10 @@ class VirtualizedList extends React.PureComponent {
   }
 
   updateLoadingStatus (status) {
+    if (!this.status) {
+      return
+    }
+
     if (!this.props.hasMore) {
       this.status.changeStatus(ENDING)
       return
