@@ -39,13 +39,14 @@ class Item extends React.PureComponent {
   }
 
   render () {
-    const { itemIndex } = this.props
+    const { itemIndex, isScrolling } = this.props
 
     return (
       <div className='item-wrapper' ref={this.setRef} style={{ minHeight: this.props.height }}>
         {
           this.props.renderItem({
-            index: itemIndex
+            index: itemIndex,
+            isScrolling
           })
         }
       </div>
@@ -73,6 +74,7 @@ class Item extends React.PureComponent {
 
 Item.propTypes = {
   itemIndex: PropTypes.any.isRequired,
+  isScrolling: PropTypes.bool.isRequired,
   renderItem: PropTypes.func,
   updateItemPosition: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
