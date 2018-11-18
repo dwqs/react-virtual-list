@@ -50,8 +50,9 @@ export default class App extends React.Component {
     this.loadNextPage = this.loadNextPage.bind(this)
   }
 
-  renderItem ({ index }) {
+  renderItem ({ index, isScrolling }) {
     const { id, image, words, paragraphs } = this.state.data[index]
+    console.log(' list is scrolling', isScrolling)
     // Needn't to set key prop
     return (
       <div className='list-item'>
